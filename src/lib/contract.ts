@@ -1,27 +1,17 @@
-import { newKit } from '@celo/contractkit';
+import Web3 from "web3";
+import { newKitFromWeb3 } from "@celo/contractkit";
 import { ContractDefinition } from '@/types/Index';
 import TodoListContractJson from '@/contracts/TodoList.json';
 import { Contract } from 'web3-eth-contract';
 
-// Ensure the correct path to the contract JSON and the correct type for the imported contract
+const web3 = new Web3("https://alfajores-forno.celo-testnet.org");
+
+const kit = newKitFromWeb3(web3);
+
 const TodoListContract = TodoListContractJson as unknown as ContractDefinition;
+const contractAddress = '0xDef7Ee6a11795437cdc2eb04212a232836eD7D69'; // Make sure to replace with your actual contract address
 
-// Initialize Celo ContractKit
-const kit = newKit('https://alfajores-forno.celo-testnet.org');
-
-// Ensure you have the correct contract address
-const contractAddress = '0xDef7Ee6a11795437cdc2eb04212a232836eD7D69'; // Replace with your contract's address
-
-// Use the statically imported ABI
-const abi = TodoListContract.abi;
-
-// Instantiate the contract with the ABI and address
-let todoList: Contract = new kit.web3.eth.Contract(abi, contractAddress);
-
-
-
-
-
+const todoList = new kit.web3.eth.Contract(TodoListContract.abi, contractAddress) as unknown as Contract;
 // Fetch all tasks
 async function fetchTasks() {
     try {
